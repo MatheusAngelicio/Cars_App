@@ -5,15 +5,33 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Carros")),
-      body: _body()
-    );
+    return Scaffold(appBar: AppBar(title: Text("Carros")), body: _body());
   }
 
   _body() {
-    Container(
-      color: Colors.white,
+    return Container(
+      padding: EdgeInsets.all(16),
+      child: ListView(
+        children: [
+          Text("Login"),
+          TextFormField(),
+          SizedBox(height: 10,),
+          Text("Senha"),
+          TextFormField(
+            obscureText: true,
+          ),
+          SizedBox(height: 20,),
+          Container(
+            height: 46,
+            child: ElevatedButton(
+              onPressed: () {},
+              child: Text(
+                "Login",
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
