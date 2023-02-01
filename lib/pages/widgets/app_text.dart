@@ -14,12 +14,12 @@ class AppText extends StatelessWidget {
   AppText(this.label,
       this.hint,
       {this.password = false,
-      required this.controller,
-      this.validator,
-      this.keyboardType,
-      this.textInputAction,
-      this.focusNode,
-      this.nextFocus});
+        required this.controller,
+        this.validator,
+        this.keyboardType,
+        this.textInputAction,
+        this.focusNode,
+        this.nextFocus});
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +37,9 @@ class AppText extends StatelessWidget {
       },
       style: const TextStyle(fontSize: 25, color: Colors.blue),
       decoration: InputDecoration(
+          border:OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16)
+          ),
           labelText: label,
           labelStyle: const TextStyle(fontSize: 25, color: Colors.grey),
           hintText: hint,
