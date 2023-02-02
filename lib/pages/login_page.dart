@@ -1,4 +1,5 @@
 import 'package:cars_app/pages/home_page.dart';
+import 'package:cars_app/pages/login_api.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/nav.dart';
@@ -61,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  _onClickLogin() {
+  _onClickLogin() async {
     bool? formOk = _formKey.currentState?.validate();
 
     if (formOk == null || formOk == false) {
@@ -73,7 +74,15 @@ class _LoginPageState extends State<LoginPage> {
 
     print("Login $login, Senha $senha");
 
-    push(context, HomePage());
+    bool ok = await LoginApi.login(login, senha);
+
+    if (ok) {
+      push(context, HomePage());
+    } else {
+      print("Login incorreto");
+    }
+
+
   }
 
   String? _validateLogin(String? text) {
