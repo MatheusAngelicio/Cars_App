@@ -1,6 +1,9 @@
-import 'package:cars_app/pages/widgets/app_button.dart';
-import 'package:cars_app/pages/widgets/app_text.dart';
+import 'package:cars_app/pages/home_page.dart';
 import 'package:flutter/material.dart';
+
+import '../utils/nav.dart';
+import '../widgets/app_button.dart';
+import '../widgets/app_text.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -69,6 +72,8 @@ class _LoginPageState extends State<LoginPage> {
     String senha = _tSenha.text;
 
     print("Login $login, Senha $senha");
+
+    push(context, HomePage());
   }
 
   String? _validateLogin(String? text) {
