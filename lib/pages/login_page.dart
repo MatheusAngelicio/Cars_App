@@ -23,6 +23,8 @@ class _LoginPageState extends State<LoginPage> {
 
   final _focusSenha = FocusNode();
 
+  bool _showProgress = false;
+
   @override
   void initState() {
     super.initState();
@@ -58,7 +60,15 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 20,
             ),
-            AppButton("Login", () => _onClickLogin),
+            _showProgress
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : AppButton(
+                    "Login",
+                    () => _onClickLogin,
+                    showProgress: _showProgress,
+                  ),
           ],
         ),
       ),
@@ -77,10 +87,13 @@ class _LoginPageState extends State<LoginPage> {
 
     print("Login $login, Senha $senha");
 
+    setState(() {
+      _showProgress = true;
+    });
+
     ApiResponse response = await LoginApi.login(login, senha);
 
     if (response.ok) {
-
       Usuario user = response.result;
 
       print(">>> $user");
@@ -89,6 +102,9 @@ class _LoginPageState extends State<LoginPage> {
       alert(context, response.msg);
     }
 
+    setState(() {
+      _showProgress = false;
+    });
   }
 
   String? _validateLogin(String? text) {
