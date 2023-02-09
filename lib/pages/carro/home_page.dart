@@ -1,4 +1,6 @@
 import 'package:cars_app/drawer_list.dart';
+import 'package:cars_app/pages/carro/carro.dart';
+import 'package:cars_app/pages/carro/carros_api.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -16,13 +18,18 @@ class HomePage extends StatelessWidget {
   }
 
   _body() {
-    return Center(
-      child: Text(
-        "Home",
-        style: TextStyle(
-          fontSize: 22,
-        ),
-      ),
-    );
+    List<Carro> carros = CarrosApi.getCarros();
+
+    return ListView.builder(
+        itemCount: carros.length,
+        itemBuilder: (context, index) {
+          Carro c = carros[index];
+
+          return Row(
+            children: [
+              Image.network(c.urlFoto ?? "", width: 150,)
+            ],
+          );
+        });
   }
 }
