@@ -21,14 +21,25 @@ class HomePage extends StatelessWidget {
     return FutureBuilder(
       future: CarrosApi.getCarros(),
       builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          print(snapshot.error);
+          return const Center(
+            child: Text(
+              "Não foi possivel buscar os carros",
+            style: TextStyle(
+              color: Colors.red,
+              fontSize: 22,
+            ),
+            ),
+          );
+        }
 
-        if(!snapshot.hasData){
+        if (!snapshot.hasData) {
           return Center(child: CircularProgressIndicator(),);
         } else {
           List<Carro> carros = snapshot.data ?? List.empty();
           return _listView(carros);
         }
-
       },
     );
   }
@@ -50,7 +61,7 @@ class HomePage extends StatelessWidget {
                   children: [
                     Center(
                       child: Image.network(
-                        c.urlFoto ?? "",
+                        c.urlFoto ?? "https://s3-sa-east-1.amazonaws.com/videos.livetouchdev.com.br/classicos/Cadillac_Eldorado.png",
                         width: 250,
                       ),
                     ),
@@ -72,17 +83,17 @@ class HomePage extends StatelessWidget {
                     ),
                     ButtonTheme(
                         child: ButtonBar(
-                      children: [
-                        TextButton(
-                          child: const Text("DETALHES"),
-                          onPressed: () {},
-                        ),
-                        TextButton(
-                          child: const Text("COMPARTILHAR"),
-                          onPressed: () {},
-                        ),
-                      ],
-                    ))
+                          children: [
+                            TextButton(
+                              child: const Text("DETALHES"),
+                              onPressed: () {},
+                            ),
+                            TextButton(
+                              child: const Text("COMPARTILHAR"),
+                              onPressed: () {},
+                            ),
+                          ],
+                        ))
                   ],
                 ),
               ),

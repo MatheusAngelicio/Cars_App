@@ -18,7 +18,7 @@ class Carro {
         this.latitude,
         this.longitude});
 
-  Carro.fromJson(Map<String, dynamic> json) {
+  Carro.fromJson(Map<dynamic, dynamic> json) {
     id = json['id'];
     nome = json['nome'];
     tipo = json['tipo'];
