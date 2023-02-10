@@ -14,13 +14,7 @@ class CarrosApi {
 
     List list = convert.json.decode(json);
 
-    final carros = <Carro>[];
+    return list.map<Carro>((map) => Carro.fromJson(map)).toList();
 
-    for(Map map in list) {
-      Carro c = Carro.fromJson(map);
-      carros.add(c);
-    }
-
-    return carros;
   }
 }
