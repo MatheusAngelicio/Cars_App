@@ -1,4 +1,5 @@
 import 'package:cars_app/drawer_list.dart';
+import 'package:cars_app/pages/carro/carros_api.dart';
 import 'package:cars_app/pages/carro/carros_listview.dart';
 import 'package:flutter/material.dart';
 
@@ -18,10 +19,10 @@ class HomePage extends StatelessWidget {
             Tab(text: "Luxo",),
           ],),
         ),
-        body: const TabBarView(children: [
-          CarrosListView(),
-          CarrosListView(),
-          CarrosListView(),
+        body: TabBarView(children: [
+          CarrosListView(TipoCarro.classicos),
+          CarrosListView(TipoCarro.esportivos),
+          CarrosListView(TipoCarro.luxo),
         ],),
         drawer: DrawerList(),
       ),

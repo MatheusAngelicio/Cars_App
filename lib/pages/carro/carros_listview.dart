@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-
 import 'carro.dart';
 import 'carros_api.dart';
 
 class CarrosListView extends StatelessWidget {
-  const CarrosListView({Key? key}) : super(key: key);
+  String tipo;
+
+  CarrosListView(this.tipo);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,7 @@ class CarrosListView extends StatelessWidget {
 
   _body() {
     return FutureBuilder(
-      future: CarrosApi.getCarros(),
+      future: CarrosApi.getCarros(tipo),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           print(snapshot.error);
@@ -29,7 +30,7 @@ class CarrosListView extends StatelessWidget {
         }
 
         if (!snapshot.hasData) {
-          return Center(child: CircularProgressIndicator(),);
+          return const Center(child: CircularProgressIndicator(),);
         } else {
           List<Carro> carros = snapshot.data ?? List.empty();
           return _listView(carros);
@@ -95,4 +96,5 @@ class CarrosListView extends StatelessWidget {
           }),
     );
   }
+
 }
