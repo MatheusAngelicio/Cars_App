@@ -20,20 +20,21 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   void initState(){
     super.initState();
 
+    _initTabs();
+  }
+
+  _initTabs() async {
     _tabController = TabController(length: 3, vsync: this);
 
-    Future<int> future = Prefs.getInt("tabIdx");
+    int tabIdx = await Prefs.getInt("tabIdx");
+    _tabController.index = tabIdx;
 
-    future.then((int tabIdx) {
-      _tabController.index = tabIdx;
-    });
 
     _tabController.addListener(() {
       print("TAB > ${_tabController.index}");
       Prefs.setInt("tabIdx", _tabController.index);
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
