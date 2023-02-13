@@ -2,20 +2,24 @@ import 'package:cars_app/pages/login/login_page.dart';
 import 'package:cars_app/utils/nav.dart';
 import 'package:flutter/material.dart';
 
+import 'pages/login/usuario.dart';
+
 class DrawerList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Future<Usuario> future = Usuario.get();
+
     return SafeArea(
       child: Drawer(
         child: ListView(
           children: <Widget>[
-            const UserAccountsDrawerHeader(
-              accountName: Text("Matheus Angelicio"),
-              accountEmail: Text("matheus.angelicio00@gmail.com"),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqP85ZnOcRSCX3nlYdkCvSxhSuZs0bLt1He8EvGr5ne8c7mTqW"),
-              ),
+            FutureBuilder<Usuario>(
+              future: future,
+              builder: (context, snapshot) {
+                // o build é chamado ao entrar na tela, e depois que meu future receber o dado, por isso verifico se é nulo
+                Usuario? user = snapshot.data;
+                return user != null ? _header(user) : Container();
+              },
             ),
             ListTile(
               leading: Icon(Icons.star),
@@ -45,6 +49,16 @@ class DrawerList extends StatelessWidget {
             )
           ],
         ),
+      ),
+    );
+  }
+
+  _header(Usuario user) {
+    return UserAccountsDrawerHeader(
+      accountName: Text(user.nome ?? ""),
+      accountEmail: Text(user.email ?? ""),
+      currentAccountPicture: CircleAvatar(
+        backgroundImage: NetworkImage(user.urlFoto ?? ""),
       ),
     );
   }
