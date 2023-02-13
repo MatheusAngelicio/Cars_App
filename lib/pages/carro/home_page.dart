@@ -6,32 +6,36 @@ import 'package:flutter/material.dart';
 import '../../utils/prefs.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
-
   @override
-  State<HomePage> createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin<HomePage>{
-
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin<HomePage> {
   late TabController _tabController;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
 
     _initTabs();
   }
 
   _initTabs() async {
+
+    // Primeiro busca o índice nas prefs.
+    int tabIdx = await Prefs.getInt("tabIdx");
+
+    // Depois cria o TabController
+    // No método build na primeira vez ele poderá estar nulo
     _tabController = TabController(length: 3, vsync: this);
 
-    int tabIdx = await Prefs.getInt("tabIdx");
-    _tabController.index = tabIdx;
-
+    // Agora que temos o TabController e o índice da tab,
+    // chama o setState para redesenhar a tela
+    setState(() {
+      _tabController.index = tabIdx;
+    });
 
     _tabController.addListener(() {
-      print("TAB > ${_tabController.index}");
       Prefs.setInt("tabIdx", _tabController.index);
     });
   }
@@ -41,21 +45,35 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return Scaffold(
       appBar: AppBar(
         title: Text("Carros"),
-        bottom: TabBar(
+        bottom: _tabController == null
+            ? null
+            : TabBar(
           controller: _tabController,
-          tabs: const [
-          Tab(text: "Clássicos",),
-          Tab(text: "Esportivos",),
-          Tab(text: "Luxo",),
-        ],),
+          tabs: [
+            Tab(
+              text: "Clássicos",
+            ),
+            Tab(
+              text: "Esportivos",
+            ),
+            Tab(
+              text: "Luxo",
+            )
+          ],
+        ),
       ),
-      body: TabBarView(
+      body: _tabController == null
+          ? Center(
+        child: CircularProgressIndicator(),
+      )
+          : TabBarView(
         controller: _tabController,
         children: [
-        CarrosListView(TipoCarro.classicos),
-        CarrosListView(TipoCarro.esportivos),
-        CarrosListView(TipoCarro.luxo),
-      ],),
+          CarrosListView(TipoCarro.classicos),
+          CarrosListView(TipoCarro.esportivos),
+          CarrosListView(TipoCarro.luxo),
+        ],
+      ),
       drawer: DrawerList(),
     );
   }
