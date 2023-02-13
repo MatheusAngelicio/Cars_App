@@ -66,4 +66,8 @@ class Usuario {
 
     return user;
   }
+
+  static void clear() {
+    Prefs.setString("user.prefs", "");
+  }
 }
