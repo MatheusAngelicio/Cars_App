@@ -1,3 +1,5 @@
+import 'package:cars_app/pages/carro/carro_page.dart';
+import 'package:cars_app/utils/nav.dart';
 import 'package:flutter/material.dart';
 import 'carro.dart';
 import 'carros_api.dart';
@@ -11,8 +13,8 @@ class CarrosListView extends StatefulWidget {
   State<CarrosListView> createState() => _CarrosListViewState();
 }
 
-class _CarrosListViewState extends State<CarrosListView> with AutomaticKeepAliveClientMixin<CarrosListView> {
-
+class _CarrosListViewState extends State<CarrosListView>
+    with AutomaticKeepAliveClientMixin<CarrosListView> {
   @override
   bool get wantKeepAlive => true;
 
@@ -40,7 +42,9 @@ class _CarrosListViewState extends State<CarrosListView> with AutomaticKeepAlive
         }
 
         if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator(),);
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         } else {
           List<Carro> carros = snapshot.data ?? List.empty();
           return _listView(carros);
@@ -66,7 +70,8 @@ class _CarrosListViewState extends State<CarrosListView> with AutomaticKeepAlive
                   children: [
                     Center(
                       child: Image.network(
-                        c.urlFoto ?? "https://s3-sa-east-1.amazonaws.com/videos.livetouchdev.com.br/classicos/Cadillac_Eldorado.png",
+                        c.urlFoto ??
+                            "https://s3-sa-east-1.amazonaws.com/videos.livetouchdev.com.br/classicos/Cadillac_Eldorado.png",
                         width: 250,
                       ),
                     ),
@@ -88,22 +93,28 @@ class _CarrosListViewState extends State<CarrosListView> with AutomaticKeepAlive
                     ),
                     ButtonTheme(
                         child: ButtonBar(
-                          children: [
-                            TextButton(
-                              child: const Text("DETALHES"),
-                              onPressed: () {},
-                            ),
-                            TextButton(
-                              child: const Text("COMPARTILHAR"),
-                              onPressed: () {},
-                            ),
-                          ],
-                        ))
+                      children: [
+                        TextButton(
+                          child: const Text("DETALHES"),
+                          onPressed: () {
+                            onClickCarro(c);
+                          },
+                        ),
+                        TextButton(
+                          child: const Text("COMPARTILHAR"),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ))
                   ],
                 ),
               ),
             );
           }),
     );
+  }
+
+  onClickCarro(Carro c) {
+    push(context, CarroPage(c));
   }
 }
