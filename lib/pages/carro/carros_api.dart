@@ -1,3 +1,5 @@
+import 'package:cars_app/pages/login/usuario.dart';
+
 import 'carro.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -13,11 +15,18 @@ class CarrosApi {
 
     String s = tipo.toString().replaceAll("TipoCarro.", "");
 
-    var url = Uri.parse('https://carros-springboot.herokuapp.com/api/v1/carros/tipo/$s');
+    Usuario user = await Usuario.get();
+
+    Map<String,String> headers = {
+      "Content-Type": "applications/json",
+      "Authorization": "Bearer ${user.token}"
+    };
+
+    var url = Uri.parse('https://carros-springboot.herokuapp.com/api/v2/carros/tipo/$s');
 
     print("GET > $url");
 
-    var response = await http.get(url);
+    var response = await http.get(url, headers: headers);
 
     String json = response.body;
 
