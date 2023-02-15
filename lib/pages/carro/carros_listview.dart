@@ -15,42 +15,35 @@ class CarrosListView extends StatefulWidget {
 
 class _CarrosListViewState extends State<CarrosListView>
     with AutomaticKeepAliveClientMixin<CarrosListView> {
+  List<Carro>? carros;
+
   @override
   bool get wantKeepAlive => true;
 
   @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return _body();
+  void initState() {
+    super.initState();
+
+    _loadData();
   }
 
-  _body() {
-    return FutureBuilder(
-      future: CarrosApi.getCarros(widget.tipo),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          print(snapshot.error);
-          return const Center(
-            child: Text(
-              "Não foi possivel buscar os carros",
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 22,
-              ),
-            ),
-          );
-        }
+  _loadData() async {
+    List<Carro> carros = await CarrosApi.getCarros(widget.tipo);
+    setState(() {
+      this.carros = carros;
+    });
+  }
 
-        if (!snapshot.hasData) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else {
-          List<Carro> carros = snapshot.data ?? List.empty();
-          return _listView(carros);
-        }
-      },
-    );
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    
+    if (carros == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    return _listView(carros ?? List.empty());
   }
 
   Container _listView(List<Carro> carros) {
