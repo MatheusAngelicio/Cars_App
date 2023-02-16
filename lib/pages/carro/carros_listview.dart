@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cars_app/pages/carro/carro_page.dart';
 import 'package:cars_app/utils/nav.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,8 @@ class _CarrosListViewState extends State<CarrosListView>
     with AutomaticKeepAliveClientMixin<CarrosListView> {
   List<Carro>? carros;
 
+  final _streamController = StreamController<List<Carro>>();
+
   @override
   bool get wantKeepAlive => true;
 
@@ -29,21 +33,36 @@ class _CarrosListViewState extends State<CarrosListView>
 
   _loadData() async {
     List<Carro> carros = await CarrosApi.getCarros(widget.tipo);
-    setState(() {
-      this.carros = carros;
-    });
+    _streamController.add(carros);
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    
-    if (carros == null) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-    return _listView(carros ?? List.empty());
+
+    return StreamBuilder(
+      stream: _streamController.stream,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Center(
+            child: Text("Não foi possível buscar os carros",
+              style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 22,
+              ),
+            ),
+          );
+        }
+        if(!snapshot.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        List<Carro>? carros = snapshot.data;
+        return _listView(carros ?? List.empty());
+      },
+    );
   }
 
   Container _listView(List<Carro> carros) {
@@ -86,19 +105,19 @@ class _CarrosListViewState extends State<CarrosListView>
                     ),
                     ButtonTheme(
                         child: ButtonBar(
-                      children: [
-                        TextButton(
-                          child: const Text("DETALHES"),
-                          onPressed: () {
-                            onClickCarro(c);
-                          },
-                        ),
-                        TextButton(
-                          child: const Text("COMPARTILHAR"),
-                          onPressed: () {},
-                        ),
-                      ],
-                    ))
+                          children: [
+                            TextButton(
+                              child: const Text("DETALHES"),
+                              onPressed: () {
+                                onClickCarro(c);
+                              },
+                            ),
+                            TextButton(
+                              child: const Text("COMPARTILHAR"),
+                              onPressed: () {},
+                            ),
+                          ],
+                        ))
                   ],
                 ),
               ),
