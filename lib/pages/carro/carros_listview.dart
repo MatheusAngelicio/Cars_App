@@ -47,8 +47,8 @@ class _CarrosListViewState extends State<CarrosListView>
           return const Center(
             child: Text("Não foi possível buscar os carros",
               style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 22,
+                color: Colors.red,
+                fontSize: 22,
               ),
             ),
           );
