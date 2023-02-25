@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import '../../utils/nav.dart';
 import '../../widgets/app_button.dart';
 import '../../widgets/app_text.dart';
+import 'login_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -17,7 +18,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _streamController = StreamController<bool>();
+  final _bloc = LoginBloc();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -69,13 +70,13 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 20,
             ),
-            StreamBuilder<bool>(
-                stream: _streamController.stream,
+            StreamBuilder(
+                stream: _bloc.loadButtonStream,
                 builder: (context, snapshot) {
                   return AppButton(
                     "Login",
                     () => _onClickLogin,
-                    showProgress: snapshot.data ?? false,
+                    showProgress: snapshot.data ?? false ,
                   );
                 }),
           ],
@@ -96,9 +97,7 @@ class _LoginPageState extends State<LoginPage> {
 
     print("Login $login, Senha $senha");
 
-    _streamController.add(true);
-
-    ApiResponse response = await LoginApi.login(login, senha);
+    ApiResponse response = await _bloc.login(login, senha);
 
     if (response.ok) {
       Usuario user = response.result;
@@ -109,7 +108,6 @@ class _LoginPageState extends State<LoginPage> {
       alert(context, response.msg);
     }
 
-    _streamController.add(false);
   }
 
   String? _validateLogin(String? text) {
@@ -132,6 +130,6 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     super.dispose();
 
-    _streamController.close();
+    _bloc.dispose();
   }
 }
