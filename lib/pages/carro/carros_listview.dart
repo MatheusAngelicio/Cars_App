@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:cars_app/pages/carro/carro_page.dart';
+import 'package:cars_app/pages/carro/carros_bloc.dart';
 import 'package:cars_app/utils/nav.dart';
 import 'package:flutter/material.dart';
 import 'carro.dart';
-import 'carros_api.dart';
 
 class CarrosListView extends StatefulWidget {
   String tipo;
@@ -19,7 +19,7 @@ class _CarrosListViewState extends State<CarrosListView>
     with AutomaticKeepAliveClientMixin<CarrosListView> {
   List<Carro>? carros;
 
-  final _streamController = StreamController<List<Carro>>();
+  final _bloc = CarrosBloc();
 
   @override
   bool get wantKeepAlive => true;
@@ -28,12 +28,7 @@ class _CarrosListViewState extends State<CarrosListView>
   void initState() {
     super.initState();
 
-    _loadData();
-  }
-
-  _loadData() async {
-    List<Carro> carros = await CarrosApi.getCarros(widget.tipo);
-    _streamController.add(carros);
+    _bloc.fetch(widget.tipo);
   }
 
   @override
@@ -41,11 +36,12 @@ class _CarrosListViewState extends State<CarrosListView>
     super.build(context);
 
     return StreamBuilder(
-      stream: _streamController.stream,
+      stream: _bloc.stream,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return const Center(
-            child: Text("Não foi possível buscar os carros",
+            child: Text(
+              "Não foi possível buscar os carros",
               style: TextStyle(
                 color: Colors.red,
                 fontSize: 22,
@@ -53,7 +49,7 @@ class _CarrosListViewState extends State<CarrosListView>
             ),
           );
         }
-        if(!snapshot.hasData) {
+        if (!snapshot.hasData) {
           return const Center(
             child: CircularProgressIndicator(),
           );
@@ -105,19 +101,19 @@ class _CarrosListViewState extends State<CarrosListView>
                     ),
                     ButtonTheme(
                         child: ButtonBar(
-                          children: [
-                            TextButton(
-                              child: const Text("DETALHES"),
-                              onPressed: () {
-                                onClickCarro(c);
-                              },
-                            ),
-                            TextButton(
-                              child: const Text("COMPARTILHAR"),
-                              onPressed: () {},
-                            ),
-                          ],
-                        ))
+                      children: [
+                        TextButton(
+                          child: const Text("DETALHES"),
+                          onPressed: () {
+                            onClickCarro(c);
+                          },
+                        ),
+                        TextButton(
+                          child: const Text("COMPARTILHAR"),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ))
                   ],
                 ),
               ),
@@ -134,6 +130,6 @@ class _CarrosListViewState extends State<CarrosListView>
   void dispose() {
     super.dispose();
 
-    _streamController.close();
+    _bloc.dispose();
   }
 }
