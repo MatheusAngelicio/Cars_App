@@ -40,7 +40,7 @@ class _CarrosListViewState extends State<CarrosListView>
       stream: _bloc.stream,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          TextError(msg: "Não foi possível buscar os carros");
+          return TextError(msg: "Não foi possível buscar os carros");
         }
         if (!snapshot.hasData) {
           return const Center(
