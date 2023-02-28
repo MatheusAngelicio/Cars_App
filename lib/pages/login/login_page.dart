@@ -107,7 +107,6 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       alert(context, response.msg);
     }
-
   }
 
   String? _validateLogin(String? text) {
